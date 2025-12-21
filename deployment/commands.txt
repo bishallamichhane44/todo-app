@@ -1,0 +1,31 @@
+sudo cp deployment/todo-backend.service /etc/systemd/system/
+
+sudo cp deployment/nginx.conf /etc/nginx/sites-available/todo-app
+
+sudo ln -s /etc/nginx/sites-available/todo-app /etc/nginx/sites-enabled/
+
+sudo rm /etc/nginx/sites-enabled/default
+
+sudo nginx -t
+
+sudo systemctl reload nginx
+
+sudo npm install -g pm2
+
+source venv/bin/activate
+
+pm2 start venv/bin/python --name "todo-backend" -- -m uvicorn main:app --host 0.0.0.0 --port 8000
+
+pm2 status
+
+cd ~/todo-app/frontend
+
+npm install
+
+npm run build
+
+sudo nano /etc/nginx/sites-available/todo-app
+
+chmod +x /home/ubuntu
+
+sudo nginx -t
