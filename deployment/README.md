@@ -19,13 +19,33 @@ ssh -i "your-key.pem" ubuntu@<EC2_PUBLIC_IP>
 ```
 *If this works, EC2 is running and ready.*
 
-Now, update packages and install dependencies:
-```bash
-# Update package lists
-sudo apt update && sudo apt upgrade -y
+Now, update packages and install dependencies correctly for Ubuntu 22.04:
 
-# Install dependencies
-sudo apt install python3-pip python3-venv nginx nodejs npm git -y
+**Step 1: Install correct Node.js (v18 LTS)**
+The default Ubuntu repository has an old Node version. Use NodeSource:
+```bash
+# Remove potential old versions
+sudo apt remove nodejs npm -y
+sudo apt autoremove -y
+
+# Install Node 20 LTS
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install nodejs -y
+
+# Verify installation
+node -v  # Should be v20.x.x
+npm -v
+```
+
+**Step 2: Install PM2 globally**
+```bash
+sudo npm install -g pm2
+```
+
+**Step 3: Install System Dependencies**
+```bash
+sudo apt update
+sudo apt install python3-pip python3-venv nginx git -y
 ```
 
 ## 3. Clone the Repository
@@ -46,19 +66,19 @@ deactivate  # Exit venv (the service will use it later)
 ```
 
 ## 5. Configure PM2 (Process Manager)
-Use PM2 to run the backend in the background and keep it alive.
+Use PM2 to run the backend in the background.
 
-1.  **Install PM2**:
+1.  **Start Backend**:
+    Make sure you are in the root directory (`/home/ubuntu/todo-app`) and the venv is created (see Step 4).
     ```bash
-    sudo npm install -g pm2
+        pm2 start backend/venv/bin/uvicorn \
+        --name todo-backend \
+        --cwd backend \
+        --interpreter none \
+        -- main:app --host 0.0.0.0 --port 8000
     ```
-2.  **Start Backend**:
-    Make sure you are in the root directory (`/home/ubuntu/todo-app`).
-    ```bash
-    pm2 start backend/venv/bin/python --name "todo-backend" -- -m uvicorn main:app --host 0.0.0.0 --port 8000
-    ```
-    *Note: We point directly to the python executable in the venv so we don't need to align activation scripts.*
-3.  **Save & Startup**:
+    *Note: We point directly to the python executable in the venv so we don't need activation scripts.*
+2.  **Save & Startup**:
     This ensures the app restarts on reboot.
     ```bash
     pm2 save
@@ -73,7 +93,7 @@ Use PM2 to run the backend in the background and keep it alive.
 ## 6. Frontend Setup
 Build the React application for production:
 ```bash
-cd ../frontend
+cd frontend
 npm install
 npm run build
 ```
