@@ -23,6 +23,7 @@ current_id = 0
 class Todo(BaseModel):
     id: Optional[int] = None
     title: str
+    detail: Optional[str] = None
     is_completed: bool = False
 
 @app.get("/api/todos", response_model=List[Todo])
@@ -33,7 +34,7 @@ def get_todos():
 def add_todo(todo: Todo):
     global current_id
     current_id += 1
-    new_todo = Todo(id=current_id, title=todo.title, is_completed=todo.is_completed)
+    new_todo = Todo(id=current_id, title=todo.title, detail=todo.detail, is_completed=todo.is_completed)
     todos.append(new_todo)
     return new_todo
 

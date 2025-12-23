@@ -61,6 +61,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-left: 10px;
+  flex-shrink: 0;
 }
 
 .add-btn:hover {
@@ -74,15 +75,15 @@ body {
 
 .todo-item {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   background: #fff;
   border: 1px solid #eee;
-  border-radius: 50px;
-  /* Pill shape */
-  padding: 15px 20px;
+  border-radius: 20px;
+  /* Pill shape but allows expansion */
   margin-bottom: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .todo-item:hover {
@@ -95,6 +96,7 @@ body {
   border: 2px solid #ddd;
   border-radius: 6px;
   margin-right: 15px;
+  flex-shrink: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -121,6 +123,7 @@ body {
   font-size: 18px;
   color: #999;
   cursor: pointer;
+  flex-shrink: 0;
   font-weight: bold;
 }
 
@@ -144,4 +147,168 @@ body {
   color: #aaa;
   font-style: italic;
   line-height: 1.5;
+}
+
+/* Accordion/Dropdown Styles */
+.todo-item {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.todo-item.expanded {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: #ddd;
+}
+
+.todo-header-row {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.todo-body {
+  padding: 0 20px 20px 20px;
+  border-top: 1px solid #f0f0f0;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detail-view {
+  padding-top: 15px;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.detail-text {
+  color: #666;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+
+.action-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Edit Form Inline */
+.edit-form-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 15px;
+}
+
+.edit-input,
+.edit-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  box-sizing: border-box;
+  /* Ensure padding doesn't affect width */
+  transition: border-color 0.2s;
+}
+
+.edit-input:focus,
+.edit-textarea:focus {
+  border-color: #333;
+  outline: none;
+}
+
+.edit-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Button Styles */
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background-color: #333;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #000;
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+.view-more-btn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.view-more-btn:hover {
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+.view-more-btn.rotated {
+  transform: rotate(180deg);
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* Truncation helper */
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
